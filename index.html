@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comisariato Kerly</title>
+    <link rel="shortcut icon" href="img/pixelcut-export.jpeg" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-8">
+                    <div class="d-flex align-items-center">
+                        <img src="img/pixelcut-export.jpeg" alt="Logo Kerly" class="brand-logo">
+                        <span class="brand-name">Comisariato Kerly</span>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="desktop-nav">
+                        <ul class="nav justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="index.html"><i class="fas fa-home me-2"></i>Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="vistas/productos.html"><i class="fa-solid fa-box-open me-2"></i>Productos</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" href="vistas/carrito.html"><i class="fas fa-shopping-cart me-2"></i>Pedidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="vistas/perfil_usuario.html"><i class="fas fa-user me-2"></i>Perfil</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-4">
+                    <div class="d-flex justify-content-end">
+                        <a href="vistas/carrito.html"><button class="btn btn-cart position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">3</span>
+                        </button></a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container mt-4">
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="search" class="form-control" placeholder="¿Qué estás buscando?">
+        </div>
+
+        <!-- Banner promocional -->
+        <div class="promo-banner mb-4">
+            <img src="img/Banner de Exposición Retráctil Verde Café Moderno Fiestas y Celebraciones Suizas (1).png" alt="Promoción especial" class="w-100">
+        </div>
+
+        <!-- Categorías horizontales -->
+        <div class="categories-scroll">
+            <a href="#" class="category-pill active">Recomendacion</a>
+            <a href="#" class="category-pill">Frutas y Verduras</a>
+            <a href="#" class="category-pill">Lácteos</a>
+            <a href="#" class="category-pill">Carnes</a>
+            <a href="#" class="category-pill">Panadería</a>
+            <a href="#" class="category-pill">Bebidas</a>
+            <a href="#" class="category-pill">Limpieza</a>
+        </div>
+
+        <!-- Ofertas del día -->
+        <section class="mb-5">
+            <h2 class="section-title">Ofertas del día</h2>
+            <div class="row">
+                <div class="col-lg-3 col-6 mt-2 mb-2">
+                    <div class="product-card position-relative">
+                        <span class="discount-badge">-30%</span>
+                        <img src="https://www.supermercadosantamaria.com/documents/10180/10504/135053142_G.jpg" alt="Oferta 1" class="product-image w-100">
+                        <div class="product-info">
+                            <h3 class="h6">Pack Familiar Yogurt</h3>
+                            <p class="text-decoration-line-through text-muted mb-1">$7.99</p>
+                            <p class="price mb-2">$5.59</p>
+                            <button class="btn btn-cart w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 mt-2 mb-2">
+                    <div class="product-card position-relative">
+                        <span class="discount-badge">-30%</span>
+                        <img src="https://www.supermercadosantamaria.com/documents/10180/10504/135053142_G.jpg" alt="Oferta 1" class="product-image w-100">
+                        <div class="product-info">
+                            <h3 class="h6">Pack Familiar Yogurt</h3>
+                            <p class="text-decoration-line-through text-muted mb-1">$7.99</p>
+                            <p class="price mb-2">$5.59</p>
+                            <button class="btn btn-cart w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 mt-2 mb-2">
+                    <div class="product-card position-relative">
+                        <span class="discount-badge">-30%</span>
+                        <img src="https://www.supermercadosantamaria.com/documents/10180/10504/135053142_G.jpg" alt="Oferta 1" class="product-image w-100">
+                        <div class="product-info">
+                            <h3 class="h6">Pack Familiar Yogurt</h3>
+                            <p class="text-decoration-line-through text-muted mb-1">$7.99</p>
+                            <p class="price mb-2">$5.59</p>
+                            <button class="btn btn-cart w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6 mt-2 mb-2">
+                    <div class="product-card position-relative">
+                        <span class="discount-badge">-30%</span>
+                        <img src="https://www.supermercadosantamaria.com/documents/10180/10504/135053142_G.jpg" alt="Oferta 1" class="product-image w-100">
+                        <div class="product-info">
+                            <h3 class="h6">Pack Familiar Yogurt</h3>
+                            <p class="text-decoration-line-through text-muted mb-1">$7.99</p>
+                            <p class="price mb-2">$5.59</p>
+                            <button class="btn btn-cart w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <!-- Más productos en oferta... -->
+            </div>
+        </section>
+
+        <!-- Productos nuevos -->
+        <section class="mb-5">
+            <h2 class="section-title">Recién llegados</h2>
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="product-card position-relative">
+                        <span class="product-badge badge-new">Nuevo</span>
+                        <img src="https://www.nativealimentos.com.br/upload/products/packs-corn-flakes-374x222-4477-7904-5932.png" alt="Producto nuevo" class="product-image w-100">
+                        <div class="product-info">
+                            <h3 class="h6">Cereal Orgánico</h3>
+                            <p class="price mb-2">$4.99</p>
+                            <button class="btn btn-cart w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Más productos nuevos... -->
+            </div>
+        </section>
+
+        <!-- Categorías destacadas -->
+        <section class="mb-5">
+            <h2 class="section-title">Categorías destacadas</h2>
+            <div class="row">
+                <div class="col-lg-4 col-6 mb-4">
+                    <div class="featured-category">
+                        <img src="https://www.frutoo.com/data/fotos/fruta-fresca.jpg" alt="Categoría" class="w-100">
+                        <h3 class="h5 mb-2">Frutas frescas</h3>
+                        <p class="text-muted mb-3">Productos orgánicos de temporada</p>
+                        <a href="#" class="btn btn-cart w-100">Ver productos</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6 mb-4">
+                    <div class="featured-category">
+                        <img src="https://www.frutoo.com/data/fotos/fruta-fresca.jpg" alt="Categoría" class="w-100">
+                        <h3 class="h5 mb-2">Frutas frescas</h3>
+                        <p class="text-muted mb-3">Productos orgánicos de temporada</p>
+                        <a href="#" class="btn btn-cart w-100">Ver productos</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6 mb-4">
+                    <div class="featured-category">
+                        <img src="https://www.frutoo.com/data/fotos/fruta-fresca.jpg" alt="Categoría" class="w-100">
+                        <h3 class="h5 mb-2">Frutas frescas</h3>
+                        <p class="text-muted mb-3">Productos orgánicos de temporada</p>
+                        <a href="#" class="btn btn-cart w-100">Ver productos</a>
+                    </div>
+                </div>
+                <!-- Más categorías... -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Navegación inferior (solo móvil) -->
+    <nav class="bottom-nav">
+        <div class="row">
+            <div class="col">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home d-block mb-1"></i>
+                    Inicio
+                </a>
+            </div>
+            <div class="col">
+                <a href="vistas/productos.html" class="nav-item">
+                    <i class="fa-solid fa-box-open d-block mb-1"></i>
+                   Productos
+                </a>
+            </div>
+            <div class="col">
+                <a href="vistas/carrito.html" class="nav-item">
+                    <i class="fas fa-shopping-cart d-block mb-1"></i>
+                    Pedidos
+                </a>
+            </div>
+            <div class="col">
+                <a href="vistas/perfil_usuario.html" class="nav-item">
+                    <i class="fas fa-user d-block mb-1"></i>
+                    Perfil
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Comisariato Kerly</title>
+    <link rel="shortcut icon" href="../img/pixelcut-export.jpeg" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --primary-light: #fff1f1;
+            --text-color: #2d3436;
+            --background-color: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding-bottom: 70px;
+        }
+
+        /* Navbar styles */
+        .navbar-top {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 0;
+        }
+
+        .brand-logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .brand-name {
+            color: var(--text-color);
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 1.5em;
+        }
+
+        /* Cart item styles */
+        .cart-item {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .cart-item-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            width: fit-content;
+        }
+
+        .quantity-btn {
+            border: none;
+            background: none;
+            padding: 5px 15px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .quantity-input {
+            width: 50px;
+            border: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Order summary styles */
+        .order-summary {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-custom {
+            background-color: white;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 12px 25px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Order tabs */
+        .order-tabs {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 20px;
+            color: var(--text-color);
+            padding: 10px 20px;
+            margin: 0 5px;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+
+        /* Empty cart state */
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart i {
+            font-size: 4em;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .cart-item {
+                padding: 15px;
+            }
+
+            .cart-item-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .order-summary {
+                position: static;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-8">
+                    <div class="d-flex align-items-center">
+                        <img src="../img/pixelcut-export.jpeg" alt="Logo Kerly" class="brand-logo">
+                        <span class="brand-name">Comisariato Kerly</span>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="desktop-nav">
+                        <ul class="nav justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link " href="../index.html"><i class="fas fa-home me-2"></i>Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="productos.html"><i class="fa-solid fa-box-open me-2"></i>Productos</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link active" href="carrito.html"><i class="fas fa-shopping-cart me-2"></i>Pedidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="perfil_usuario.html"><i class="fas fa-user me-2"></i>Perfil</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-4">
+                    <div class="d-flex justify-content-end">
+                        <a href="carrito.html"> <button class="btn btn-cart position-relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">3</span>
+                        </button></a>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Main content -->
+    <div class="container mt-4">
+        <!-- Order tabs -->
+        <div class="order-tabs">
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Carrito (3)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">En proceso (1)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Historial</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <!-- Cart items -->
+            <div class="col-lg-8">
+                <!-- Cart item 1 -->
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="https://img.freepik.com/foto-gratis/manzanas-rojas-frescas-suaves-jugosas-enteras-perfectas-escritorio-blanco_179666-271.jpg" alt="Producto" class="cart-item-image">
+                        </div>
+                        <div class="col">
+                            <h3 class="h6 mb-1">Manzanas Rojas</h3>
+                            <p class="text-muted small mb-2">1kg</p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="text" class="quantity-input" value="2" readonly>
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="col-auto text-end">
+                            <p class="price h5 mb-2">$5.98</p>
+                            <button class="btn btn-link text-danger p-0">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart item 2 -->
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="https://comisariato.lahabana.ec/wp-content/uploads/2020/07/Nutri-900ml-Entera-872x664-1.gif" alt="Producto" class="cart-item-image">
+                        </div>
+                        <div class="col">
+                            <h3 class="h6 mb-1">Leche Deslactosada</h3>
+                            <p class="text-muted small mb-2">1L</p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="text" class="quantity-input" value="1" readonly>
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="col-auto text-end">
+                            <p class="price h5 mb-2">$1.99</p>
+                            <button class="btn btn-link text-danger p-0">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart item 3 -->
+                <div class="cart-item">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <img src="https://bimbousa.com/sites/default/files/2022-07/BBK21_Renders_integrala.png" alt="Producto" class="cart-item-image">
+                        </div>
+                        <div class="col">
+                            <h3 class="h6 mb-1">Pan Integral</h3>
+                            <p class="text-muted small mb-2">500g</p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn">-</button>
+                                <input type="text" class="quantity-input" value="3" readonly>
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </div>
+                        <div class="col-auto text-end">
+                            <p class="price h5 mb-2">$10.47</p>
+                            <button class="btn btn-link text-danger p-0">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue shopping button -->
+                <div class="text-center mt-4">
+                    <a href="productos.html" class="btn btn-outline-custom">
+                        <i class="fas fa-arrow-left me-2"></i>Seguir comprando
+                    </a>
+                </div>
+            </div>
+
+            <!-- Order summary -->
+            <div class="col-lg-4">
+                <div class="order-summary">
+                    <h3 class="h5 mb-4">Resumen del pedido</h3>
+                    
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span>$18.44</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Descuento</span>
+                        <span class="text-success">-$2.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Envío</span>
+                        <span>$3.00</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="summary-item mb-4">
+                        <span class="fw-bold">Total</span>
+                        <span class="total-amount">$19.44</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Método de pago</label>
+                        <select class="form-select">
+                            <option>Efectivo</option>
+                            <option>Tarjeta de crédito</option>
+                            <option>Transferencia bancaria</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Dirección de entrega</label>
+                        <select class="form-select mb-2">
+                            <option>Casa principal</option>
+                            <option>Oficina</option>
+                        </select>
+                        <button class="btn btn-link p-0">
+                            <i class="fas fa-plus-circle"></i> Agregar nueva dirección
+                        </button>
+                    </div>
+
+                    <button class="btn btn-primary-custom w-100">
+                        <i class="fas fa-lock me-2"></i>Proceder al pago
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty cart state (hidden by default) -->
+        <div class="empty-cart" style="display: none;" >
+            <i class="fas fa-shopping-cart"></i>
+            <h3 class="mb-3">Tu carrito está vacío</h3>
+            <p class="text-muted mb-4">¡Agrega productos a tu carrito para comenzar!</p>
+            <a href="#" class="btn btn-primary-custom">
+                <i class="text-white fas fa-shopping-basket me-2"></i>
+            </a>
+        </div>
+
+</div>     
+   <!-- Navegación inferior (solo móvil) -->
+   <nav class="bottom-nav">
+    <div class="row">
+        <div class="col">
+            <a href="../index.html" class="nav-item ">
+                <i class="fas fa-home d-block mb-1"></i>
+                Inicio
+            </a>
+        </div>
+        <div class="col">
+            <a href="productos.html" class="nav-item">
+                <i class="fa-solid fa-box-open d-block mb-1"></i>
+               Productos
+            </a>
+        </div>
+        <div class="col">
+            <a href="carrito.html" class="nav-item active">
+                <i class="fas fa-shopping-cart d-block mb-1"></i>
+                Pedidos
+            </a>
+        </div>
+        <div class="col">
+            <a href="perfil_usuario.html" class="nav-item">
+                <i class="fas fa-user d-block mb-1"></i>
+                Perfil
+            </a>
+        </div>
+    </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
