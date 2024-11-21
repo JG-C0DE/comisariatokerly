@@ -296,29 +296,29 @@
 
                     <div class="filter-section">
                         <h5 class="filter-title">Categorías</h5>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-categoria">
                             <input type="checkbox" id="cat1">
                             <label for="cat1">Frutas y Verduras</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-categoria">
                             <input type="checkbox" id="cat2">
                             <label for="cat2">Lácteos</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-categoria">
                             <input type="checkbox" id="cat3">
                             <label for="cat3">Carnes</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-categoria">
                             <input type="checkbox" id="cat4">
                             <label for="cat4">Panadería</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-categoria">
                             <input type="checkbox" id="cat5">
                             <label for="cat5">Bebidas</label>
                         </div>
                     </div>
 
-                    <div class="filter-section">
+                    <div class="filter-section filter-precio">
                         <h5 class="filter-title">Rango de precio</h5>
                         <div class="price-range">
                             <input type="range" class="form-range" min="0" max="100" id="priceRange">
@@ -331,11 +331,11 @@
 
                     <div class="filter-section">
                         <h5 class="filter-title">Disponibilidad</h5>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-stock">
                             <input type="checkbox" id="stock1">
                             <label for="stock1">En stock</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-stock">
                             <input type="checkbox" id="stock2">
                             <label for="stock2">Ofertas</label>
                         </div>
@@ -343,15 +343,15 @@
 
                     <div class="filter-section">
                         <h5 class="filter-title">Marcas</h5>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-marca">
                             <input type="checkbox" id="brand1">
                             <label for="brand1">Nutrileche</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-marca">
                             <input type="checkbox" id="brand2">
                             <label for="brand2">Marca local</label>
                         </div>
-                        <div class="filter-checkbox">
+                        <div class="filter-checkbox filter-marca">
                             <input type="checkbox" id="brand3">
                             <label for="brand3">Bimbo</label>
                         </div>
@@ -453,189 +453,169 @@
                 </div>
             </div>
         </div>
-
-<script>
-    const categoryLinks = document.querySelectorAll('.category-pill');
-    const productItems = document.querySelectorAll('.product-item');
-    const sortSelect = document.querySelector('.sort-select');
-    const productCount = document.getElementById('product-count');
-
-    let currentCategory = 'todos'; // Categoría seleccionada
-    let currentSort = 'relevantes'; // Orden seleccionado
-
-    // Función para mostrar y contar productos según la categoría seleccionada
-    function filterProducts() {
-        let visibleCount = 0;
-
-        productItems.forEach(item => {
-            const productCategory = item.getAttribute('data-category');
-            const matchesCategory =
-                currentCategory === 'todos' || productCategory === currentCategory;
-
-            if (matchesCategory) {
-                item.style.display = 'block';
-                visibleCount++;
-            } else {
-                item.style.display = 'none';
+        <script>
+            const categoryLinks = document.querySelectorAll('.category-pill');
+            const productItems = document.querySelectorAll('.product-item');
+            const sortSelect = document.querySelector('.sort-select');
+            const productCount = document.getElementById('product-count');
+            const rangeInput = document.getElementById('priceRange');
+            const categoryCheckboxes = document.querySelectorAll('.filter-categoria input');
+            const stockCheckboxes = document.querySelectorAll('.filter-stock input');
+            const brandCheckboxes = document.querySelectorAll('.filter-marca input');
+            
+            const rangeTooltip = document.createElement('div');
+            rangeTooltip.className = 'range-tooltip';
+            document.body.appendChild(rangeTooltip);
+        
+            let currentCategory = 'todos'; // Categoría seleccionada (móvil)
+            let currentSort = 'relevantes'; // Orden seleccionado
+            let selectedCategories = []; // Filtros de sidebar
+            let selectedStock = []; // Filtros de disponibilidad
+            let selectedBrands = []; // Filtros de marcas
+            let maxPrice = 100;
+        
+            // Mostrar tooltip dinámico para rango de precio
+            function updateTooltip() {
+                const value = rangeInput.value;
+                const rect = rangeInput.getBoundingClientRect();
+                const tooltipX = rect.left + (value / rangeInput.max) * rect.width - 20;
+                const tooltipY = rect.top - 25;
+        
+                rangeTooltip.style.left = `${tooltipX}px`;
+                rangeTooltip.style.top = `${tooltipY}px`;
+                rangeTooltip.textContent = `$${value}`;
             }
-        });
-
-        // Actualiza el contador de productos visibles
-        productCount.textContent = visibleCount;
-
-        // Aplica el ordenamiento después del filtrado
-        sortProducts();
-    }
-
-    // Función para ordenar productos por precio
-    function sortProducts() {
-        const visibleProducts = [...productItems].filter(
-            item => item.style.display === 'block'
-        );
-
-        // Ordenar elementos visibles
-        visibleProducts.sort((a, b) => {
-            const priceA = parseFloat(
-                a.querySelector('.price').textContent.replace('$', '')
+        
+            // Filtrar productos según los filtros aplicados
+            function filterProducts() {
+                let visibleCount = 0;
+        
+                productItems.forEach(item => {
+                    const productCategory = item.getAttribute('data-category').toLowerCase();
+                    const productStock = item.querySelector('.stock-badge').textContent.trim().toLowerCase();
+                    const productBrand = item.querySelector('.product-brand').textContent.trim().toLowerCase();
+                    const productPrice = parseFloat(
+                        item.querySelector('.price').textContent.replace('$', '')
+                    );
+        
+                    const matchesMobileCategory =
+                        currentCategory === 'todos' || productCategory === currentCategory;
+                    const matchesSidebarCategory =
+                        selectedCategories.length === 0 || selectedCategories.includes(productCategory);
+                    const matchesStock =
+                        selectedStock.length === 0 || selectedStock.some(stock => productStock.includes(stock));
+                    const matchesBrand =
+                        selectedBrands.length === 0 || selectedBrands.includes(productBrand);
+                    const matchesPrice = productPrice <= maxPrice;
+        
+                    // Mostrar producto si cumple todos los filtros
+                    if (
+                        matchesMobileCategory &&
+                        matchesSidebarCategory &&
+                        matchesStock &&
+                        matchesBrand &&
+                        matchesPrice
+                    ) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+        
+                // Actualizar contador de productos visibles
+                if (productCount) {
+                    productCount.textContent = visibleCount;
+                }
+        
+                sortProducts(); // Ordenar después de filtrar
+            }
+        
+            // Ordenar productos por precio
+            function sortProducts() {
+                const visibleProducts = [...productItems].filter(
+                    item => item.style.display === 'block'
+                );
+        
+                visibleProducts.sort((a, b) => {
+                    const priceA = parseFloat(
+                        a.querySelector('.price').textContent.replace('$', '')
+                    );
+                    const priceB = parseFloat(
+                        b.querySelector('.price').textContent.replace('$', '')
+                    );
+        
+                    if (currentSort === 'menor-precio') return priceA - priceB;
+                    if (currentSort === 'mayor-precio') return priceB - priceA;
+                    return 0; // Orden original para "relevantes"
+                });
+        
+                const parent = document.querySelector('.row-products');
+                visibleProducts.forEach(product => parent.appendChild(product));
+            }
+        
+            // Manejo de cambios en el rango de precio
+            rangeInput.addEventListener('input', () => {
+                maxPrice = rangeInput.value;
+                updateTooltip();
+                filterProducts();
+            });
+        
+            // Manejo de clic en categorías móviles
+            categoryLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentCategory = this.getAttribute('data-category');
+                    categoryLinks.forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    filterProducts();
+                });
+            });
+        
+            // Manejo de cambios en el orden de productos
+            sortSelect.addEventListener('change', function () {
+                currentSort = this.value;
+                sortProducts();
+            });
+        
+            // Manejo de cambios en filtros de categorías
+            categoryCheckboxes.forEach(checkbox =>
+                checkbox.addEventListener('change', () => {
+                    selectedCategories = Array.from(categoryCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.nextElementSibling.textContent.trim().toLowerCase());
+                    filterProducts();
+                })
             );
-            const priceB = parseFloat(
-                b.querySelector('.price').textContent.replace('$', '')
+        
+            // Manejo de cambios en filtros de disponibilidad
+            stockCheckboxes.forEach(checkbox =>
+                checkbox.addEventListener('change', () => {
+                    selectedStock = Array.from(stockCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.nextElementSibling.textContent.trim().toLowerCase());
+                    filterProducts();
+                })
             );
-
-            if (currentSort === 'menor-precio') return priceA - priceB;
-            if (currentSort === 'mayor-precio') return priceB - priceA;
-            return 0; // Mantener el orden original para "relevantes"
-        });
-
-        // Rearmar el DOM en el nuevo orden
-        const parent = document.querySelector('.row-products');
-        visibleProducts.forEach(product => parent.appendChild(product));
-    }
-
-    // Manejo de clic en las categorías
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            // Actualiza la categoría actual
-            currentCategory = this.getAttribute('data-category');
-
-            // Cambiar el estado activo de las categorías
-            categoryLinks.forEach(link => link.classList.remove('active'));
-            this.classList.add('active');
-
-            // Filtrar productos según la nueva categoría
+        
+            // Manejo de cambios en filtros de marcas
+            brandCheckboxes.forEach(checkbox =>
+                checkbox.addEventListener('change', () => {
+                    selectedBrands = Array.from(brandCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.nextElementSibling.textContent.trim().toLowerCase());
+                    filterProducts();
+                })
+            );
+        
+            // Inicializar
+            updateTooltip();
             filterProducts();
-        });
-    });
+            window.addEventListener('resize', updateTooltip);
+        </script>
+        
+        
 
-    // Manejo del cambio en el filtro de ordenamiento
-    sortSelect.addEventListener('change', function () {
-        currentSort = this.value;
-        sortProducts(); // Aplica el orden en los productos visibles
-    });
-
-    // Inicializa el filtrado y ordenamiento
-    filterProducts();
-</script>
-
-<script>
-    // Obtener referencias a los elementos del DOM
-    const rangeInput = document.getElementById('priceRange');
-    const productItem = document.querySelectorAll('.product-item');
-    const categoryCheckboxes = document.querySelectorAll('.filter-checkbox input');
-    const stockCheckboxes = document.querySelectorAll('#stock1, #stock2');
-    const brandCheckboxes = document.querySelectorAll('#brand1, #brand2, #brand3');
-
-    let selectedCategories = [];
-    let selectedStock = [];
-    let selectedBrands = [];
-    let maxPrice = 100;
-
-    // Crear tooltip para mostrar el precio dinámico
-    const rangeTooltip = document.createElement('div');
-    rangeTooltip.className = 'range-tooltip';
-    document.body.appendChild(rangeTooltip);
-
-    // Posiciona el tooltip dinámicamente sobre el control deslizante
-    function updateTooltip() {
-        const value = rangeInput.value;
-        const rect = rangeInput.getBoundingClientRect();
-        const tooltipX = rect.left + (value / rangeInput.max) * rect.width - 20; // Ajuste del tooltip
-        const tooltipY = rect.top - 25; // Posición arriba del slider
-
-        rangeTooltip.style.left = `${tooltipX}px`;
-        rangeTooltip.style.top = `${tooltipY}px`;
-        rangeTooltip.textContent = `$${value}`;
-    }
-
-    // Actualiza los filtros seleccionados
-    function updateFilters() {
-        selectedCategories = Array.from(categoryCheckboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase());
-
-        selectedStock = Array.from(stockCheckboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.id === 'stock1' ? 'en stock' : 'ofertas');
-
-        selectedBrands = Array.from(brandCheckboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.nextElementSibling.textContent.trim().toLowerCase());
-
-        maxPrice = rangeInput.value;
-
-        filterProducts();
-    }
-
-    // Filtrar productos según los criterios seleccionados
-    function filterProducts() {
-        productItem.forEach(item => {
-            const productCategory = item.getAttribute('data-category').toLowerCase();
-            const productStock = item.querySelector('#stock').textContent.trim().toLowerCase();
-            const productBrand = item.querySelector('#marca').textContent.trim().toLowerCase();
-            const productPrice = parseFloat(
-                item.querySelector('.price').textContent.replace('$', '')
-            );
-
-            const matchesCategory =
-                selectedCategories.length === 0 || selectedCategories.includes(productCategory);
-            const matchesStock =
-                selectedStock.length === 0 || selectedStock.includes(productStock);
-            const matchesBrand =
-                selectedBrands.length === 0 || selectedBrands.includes(productBrand);
-            const matchesPrice = productPrice <= maxPrice;
-
-            if (matchesCategory && matchesStock && matchesBrand && matchesPrice) {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    }
-
-    // Event listeners
-    rangeInput.addEventListener('input', () => {
-        updateTooltip();
-        updateFilters();
-    });
-
-    categoryCheckboxes.forEach(checkbox =>
-        checkbox.addEventListener('change', updateFilters)
-    );
-
-    stockCheckboxes.forEach(checkbox =>
-        checkbox.addEventListener('change', updateFilters)
-    );
-
-    brandCheckboxes.forEach(checkbox =>
-        checkbox.addEventListener('change', updateFilters)
-    );
-
-    // Inicialización
-    updateTooltip();
-    window.addEventListener('resize', updateTooltip); // Ajusta el tooltip al cambiar tamaño
-</script>
 
 <style>
     /* Estilo del tooltip dinámico */
